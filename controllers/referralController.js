@@ -1,17 +1,31 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const createReferral = async (req, res, next) => {
+const createReferral = async (req, res) => {
+  const {
+    referrerName,
+    referrerEmail,
+    referrerPhone,
+    refereeName,
+    refereeEmail,
+    courseName,
+  } = req.body;
+
   try {
-    const { yourName, yourEmail, yourPhone, refereeName, refereeEmail, refereePhone, courseInterested } = req.body;
-
     const referral = await prisma.referral.create({
-      data: { yourName, yourEmail, yourPhone, refereeName, refereeEmail, refereePhone, courseInterested }
+      data: {
+        referrerName,
+        referrerEmail,
+        referrerPhone,
+        refereeName,
+        refereeEmail,
+        courseName,
+      },
     });
-
     res.status(201).json(referral);
   } catch (error) {
-    next(error); // Pass error to error handler middleware
+    console.error("Error creating referral:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
